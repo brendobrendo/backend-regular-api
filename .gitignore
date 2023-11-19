@@ -1,4 +1,6 @@
 .env
+.env.local
+.env.development
 cert.pem
 key.pem
 

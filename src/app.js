@@ -18,17 +18,20 @@ connectDB();
 // Routes
 app.use('/api', characterRoutes);
 
-// SSL certificate setup
-const options = {
-    key: fs.readFileSync('./key.pem'),
-    cert: fs.readFileSync('./cert.pem')
-};
-
 const port = process.env.PORT || 4000;
-// app.listen(port, () => {
-//     console.log(`Server is running on port ${port}`);
-// });
 
-https.createServer(options, app).listen(port, () => {
-    console.log(`Server running on https://localhost:${port}`);
-});
+if (process.env.APP_VARIANT === 'local') {
+    // SSL certificate setup if running locally
+    const options = {
+        key: fs.readFileSync('./key.pem'),
+        cert: fs.readFileSync('./cert.pem')
+    };
+
+    https.createServer(options, app).listen(port, () => {
+        console.log(`Server running on https://localhost:${port}`);
+    });
+} else {
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
+}
